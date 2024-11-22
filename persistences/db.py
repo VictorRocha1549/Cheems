@@ -3,8 +3,8 @@ from mysql.connector import Error
 
 def get_dn_connection():
     return mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='0801',
-        database='cheems'
+        host='162.241.2.39',
+        user='itsonapp_244277',
+        password='244277db#563G',
+        database='itsonapp_244277'
     )
