@@ -43,11 +43,10 @@ def update_ciudad(id):
 
 @app.route('/envios')
 def envios():
-    envios = Envio.get_all()  # Obtén todos los envíos
+    envios = Envio.get_all() 
 
-    # Depuración: Imprimir cada `envio` para verificar el valor de `id`
     for envio in envios:
-        print(f"Envío ID: {envio.id}")  # Aquí verificamos si el id está presente
+        print(f"Envío ID: {envio.id}")  
 
         origen = Ciudad.get_by_id(envio.origen_id)
         if origen:
@@ -66,7 +65,7 @@ def envios():
 @app.route('/envio-registro', methods=['GET'])
 def envio_registro():  
     envio = Envio(remitente='', destinatario='', origen_id='', destino_id='', fecha_envio='', numero_guia='', estado='')
-    ciudades = Ciudad.get_all()  # Obtén todas las ciudades para pasarlas al formulario
+    ciudades = Ciudad.get_all()  
     return render_template('envio.html', envio=envio, ciudades=ciudades)
 
 
@@ -102,7 +101,7 @@ def get_envio(id):
 
 
 @app.route('/envio/<int:id>', methods=['DELETE'])
-def eliminar_envio(id):  # Cambié el nombre de la función
+def eliminar_envio(id):  
     result = Envio.delete(id)
     if result == 0:
         return jsonify({'error': 'El envío no existe'}), 404
@@ -117,16 +116,14 @@ def editar_envio(id):
     ciudades = Ciudad.get_all()
 
     if request.method == 'POST':
-        # Obtener los datos del formulario
+
         data = request.form
         nuevo_numero_guia = data['numero_guia']
-        
-        # Verificar si el nuevo número de guía ya existe en otro envío
+
         envio_existente = Envio.query.filter_by(numero_guia=nuevo_numero_guia).first()
         if envio_existente and envio_existente.id != id:
             return render_template('envio.html', envio=envio, ciudades=ciudades, error="El número de guía ya está en uso")
 
-        # Si no existe, actualizar el envío
         envio.origen_id = data['origen_id']
         envio.destino_id = data['destino_id']
         envio.remitente = data['remitente']
