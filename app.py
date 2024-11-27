@@ -144,5 +144,9 @@ def editar_envio(id):
 
     return render_template('envio.html', envio=envio, ciudades=ciudades)
 
+@app.route('/costos.html')
+def costos():
+    return render_template('costos.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
