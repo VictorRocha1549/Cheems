@@ -1,0 +1,73 @@
+{% include 'header.html' %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Costos de Tamaños </title>
+    
+</head>
+<body>
+    <h1>Costos de envio por tamaño</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Tamaño</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Pequeño</td>
+                <td>$150.00</td>
+            </tr>
+            <tr>
+                <td>Mediano</td>
+                <td>$200.00</td>
+            </tr>
+            <tr>
+                <td>Grande</td>
+                <td>$300.00</td>
+            </tr>
+            <tr>
+                <td>Extra Grande</td>
+                <td>$350.00</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+<style>
+    h1{
+        text-align: center;
+        font: Arial;
+        margin: 30px;
+        color: black;
+    }
+    table {
+        width: 50%;
+        border-collapse: collapse;
+        margin: 20px auto;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        margin-bottom: 200px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    th {
+        background-color: #edca6b;
+        font-weight: bold;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+</html>
+
+
+{% include 'footer.html' %}
