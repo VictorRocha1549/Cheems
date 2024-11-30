@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, jsonify, redirect, url_for
 from entities.ciudad import Ciudad
 from entities.envio import Envio
+from entities.usuario import Usuario
 
 app = Flask(__name__)
 
@@ -147,6 +148,25 @@ def editar_envio(id):
 @app.route('/costos.html')
 def costos():
     return render_template('costos.html')
+
+#Rutas para usuarios
+
+@app.route('/login', methods=['GET'])
+def login():
+    return render_template('login.html')
+
+@app.route('/registro', methods=['GET'])
+def registro():
+    ciudades=Ciudad.get_all()
+    return render_template('registro.html', ciudades=ciudades)
+
+@app.route('/registro', methods=['POST'])
+def save_usuario():
+    data = request.json
+    usuario = Usuario(nombre=data['nombre'], contrasenia=data['contrasenia'], ciudad_id=data['ciudad_id'])
+    id = Usuario.save(usuario)
+    return jsonify({'id': id}), 201
+
 
 if __name__ == '__main__':
     app.run(debug=True)
