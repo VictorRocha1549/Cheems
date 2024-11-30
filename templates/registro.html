@@ -1,3 +1,45 @@
 {% include 'header.html' %}
 
+<section class="section">
+    <div class="bg-overlay bg-primary back-presentation"></div>
+    <div class="container">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-6 col-sm-8">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h5 class="mb-3 text-center title-page">Registro de Usuario</h5>
+                                <!-- Campo para el nombre -->
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu nombre" required>
+                                </div>
+                                <!-- Campo para la contraseña -->
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Contraseña</label>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                                </div>
+                                <!-- Campo para la ciudad -->
+                                <div class="mb-3">
+                                    <label for="city" class="form-label">Ciudad</label>
+                                    <select class="form-select" id="estado" name="estado" required>
+                                        {% for c in ciudades  %}
+                                        <option value="{{c.nombre}}">{{c.nombre}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <!-- Botones -->
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary">Registrar</button>
+                                    <button type="button" class="btn btn-secondary" onclick="window.history.back()">Regresar</button>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 {% include 'footer.html' %}

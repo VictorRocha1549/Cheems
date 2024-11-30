@@ -155,7 +155,12 @@ def costos():
 def login():
     return render_template('login.html')
 
-@app.route('/login-registro', methods=['POST'])
+@app.route('/registro', methods=['GET'])
+def registro():
+    ciudades=Ciudad.get_all()
+    return render_template('registro.html', ciudades=ciudades)
+
+@app.route('/registro', methods=['POST'])
 def save_usuario():
     data = request.json
     usuario = Usuario(nombre=data['nombre'], contrasenia=data['contrasenia'], ciudad_id=data['ciudad_id'])
