@@ -50,4 +50,18 @@ class Usuario:
             cursor.close()
             connection.close()
 
+    @staticmethod
+    def get_by_name(usuario_nombre):
+        try:
+            connection = get_dn_connection()
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute('SELECT * FROM usuarios WHERE nombre = %s', (usuario_nombre,))
+            usuario = cursor.fetchone()  # Obtener el primer resultado
+            return usuario  # Devuelve el diccionario con los datos del usuario
+        except Error as e:
+            print(f"Error al obtener usuario por nombre: {e}")  # Depuración en caso de error
+            return None
+        finally:
+            cursor.close()
+            connection.close()
     
