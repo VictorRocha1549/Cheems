@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, jsonify, redirect, url_for
 from entities.ciudad import Ciudad
 from entities.envio import Envio
 from entities.usuario import Usuario
+from entities.guia import Guia
 
 app = Flask(__name__)
 
@@ -39,6 +40,18 @@ def update_ciudad(id):
     if result == 0:
         return jsonify({'error': 'El registro de ciudad no existe'}), 404
     return jsonify({'id': id}), 201
+
+
+#Metodos para guia
+
+@app.route('/guia')
+def guia():
+    guia = Guia.get_all(Guia)  # Obtiene todos los datos de las guías (esto puede modificarse según tus necesidades)
+    return render_template('guia.html', guia=guia)
+
+
+
+
 
 # Métodos para envíos
 
