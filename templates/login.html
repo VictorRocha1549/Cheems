@@ -11,14 +11,14 @@
                             <h5 class="mb-3 text-center title-page">Inicio de Sesión</h5>
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Nombre de usuario</label>
-                                    <input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu nombre de usuario" required>
+                                    <input type="text" class="form-control" id="form-nombre" name="username" placeholder="Ingresa tu nombre de usuario" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Contraseña</label>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                                    <input type="password" class="form-control" id="form-contrasenia" name="password" placeholder="Ingresa tu contraseña" required>
                                 </div>
                                 <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                                    <button onclick="login()" class="btn btn-primary">Iniciar Sesión</button>
                                 </div>
                             <div class="text-center mt-3">
                                 <a class="text-decoration-none text-primary" href="{{ url_for('registro') }}">Registrarse</a>
@@ -30,5 +30,6 @@
         </div>
     </div>
 </section>
+<script src="{{url_for('static', filename='js/cheems/usuario.js')}}"></script>
 
 {% include 'footer.html' %}

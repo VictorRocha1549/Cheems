@@ -1,10 +1,12 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for
+from flask import Flask, request, render_template, jsonify, redirect, url_for, session
 from entities.ciudad import Ciudad
 from entities.envio import Envio
 from entities.usuario import Usuario
 from entities.guia import Guia
 
 app = Flask(__name__)
+
+app.secret_key='Aqui se supone va una clave secreta, pero da igual, es un proyecto escolar'
 
 # Rutas para ciudades
 @app.route('/')
@@ -180,6 +182,23 @@ def save_usuario():
     usuario = Usuario(nombre=data['nombre'], contrasenia=data['contrasenia'], ciudad_id=ciudad['id'])
     id = Usuario.save(usuario)
     return jsonify({'id': id}), 201
+
+@app.route('/inicio', methods=['POST'])
+def inicio_valido():
+    data = request.json
+    usuario=Usuario.get_by_name(data['nombre'])
+    if not usuario or usuario['contrasenia'] != data['contrasenia']:
+        return jsonify({'error': 'Usuario o contraseña incorrectos'}), 404
+
+    session['usuario_id'] = usuario['id']
+    return jsonify({'usuario': usuario['nombre']}), 201
+
+@app.route('/inicio', methods=['GET'])
+def inicio():
+    usuario=Usuario.get_by_id(session['usuario_id'])
+    return render_template('inicio.html', usuario=usuario)
+
+
 
 
 if __name__ == '__main__':
