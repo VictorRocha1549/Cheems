@@ -168,6 +168,7 @@ def costos():
 
 @app.route('/login', methods=['GET'])
 def login():
+    session.clear()
     return render_template('login.html')
 
 @app.route('/registro', methods=['GET'])
@@ -195,8 +196,8 @@ def inicio_valido():
 
 @app.route('/inicio', methods=['GET'])
 def inicio():
-    usuario=Usuario.get_by_id(session['usuario_id'])
-    return render_template('inicio.html', usuario=usuario)
+    return render_template('inicio.html')
+
 
 
 

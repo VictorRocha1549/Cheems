@@ -42,7 +42,6 @@ function login(){
     })
     .then(response => {
         if (response.status === 201) {
-            alert('Se inicio sesion correctamente');
             window.location.href = '/inicio';
         } else {
             alert(`Ocurrió un error al iniciar sesion: ${response.status}`);
