@@ -163,7 +163,8 @@ def registro():
 @app.route('/registro', methods=['POST'])
 def save_usuario():
     data = request.json
-    usuario = Usuario(nombre=data['nombre'], contrasenia=data['contrasenia'], ciudad_id=data['ciudad_id'])
+    ciudad=Ciudad.get_by_name(data['ciudad'])
+    usuario = Usuario(nombre=data['nombre'], contrasenia=data['contrasenia'], ciudad_id=ciudad['id'])
     id = Usuario.save(usuario)
     return jsonify({'id': id}), 201
 
