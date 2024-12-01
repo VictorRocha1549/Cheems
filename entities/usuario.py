@@ -43,7 +43,7 @@ class Usuario:
             cursor = connection.cursor()
             cursor.execute('INSERT INTO usuarios(nombre, contrasenia, ciudad_id) VALUES(%s,%s,%s)', (usuario.nombre, usuario.contrasenia, usuario.ciudad_id))
             connection.commit()
-            return cursor.lastrowid  # Devuelve el ID de la ciudad recién insertada
+            return cursor.lastrowid  # Devuelve el ID del usuario recién insertada
         except Error as e:
             return str(e)
         finally:

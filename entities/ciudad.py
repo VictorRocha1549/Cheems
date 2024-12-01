@@ -62,3 +62,18 @@ class Ciudad:
         finally:
             cursor.close()
             connection.close()
+
+    @staticmethod
+    def get_by_name(ciudad_nombre):
+        try:
+            connection = get_dn_connection()
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute('SELECT * FROM ciudad WHERE nombre = %s', (ciudad_nombre,))
+            ciudad = cursor.fetchone()  # Obtener el primer resultado
+            return ciudad  # Devuelve el diccionario con los datos de la ciudad
+        except Error as e:
+            print(f"Error al obtener ciudad por nombre: {e}")  # Depuración en caso de error
+            return None
+        finally:
+            cursor.close()
+            connection.close()
