@@ -30,18 +30,11 @@
             <div class="collapse navbar-collapse" id="topnav-menu-content">
                 <ul class="navbar-nav ms-auto" id="topnav-menu">
                     <li class="nav-item">
-                        <a class="nav-link font-size-15 text-dark" href="{{ url_for('inicio') }}">Inicio</a>
+                        <a class="nav-link font-size-15 text-dark" href="{{ url_for('index') }}">Inicio</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link font-size-15 text-dark" href="{{ url_for('envios') }}">Envíos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link font-size-15 text-dark" href="{{ url_for('ciudades') }}">Ciudad</a>
-                    </li>
-                </ul>
 
                 <div class="my-2 ms-lg-2">
-                    <a href="{{ url_for('login') }}" class="btn btn-light">Cerrar sesion</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-light">Iniciar sesión</a>
                 </div>
             </div>
         </div>
