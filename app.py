@@ -49,6 +49,12 @@ def update_ciudad(id):
 @app.route('/guia')
 def guia():
     guia = Guia.get_all(Guia)  # Obtiene todos los datos de las guías (esto puede modificarse según tus necesidades)
+    ciudades=[]
+    for g in guia:
+        ciudades.append(Ciudad.get_by_id(g['ciudad_id']))
+    ciudades_dict = {c['id']: c['nombre'] for c in ciudades}
+    for g in guia:
+        g['ciudad_nombre'] = ciudades_dict.get(g['ciudad_id'], "Ciudad desconocida")
     return render_template('guia.html', guia=guia)
 
 
