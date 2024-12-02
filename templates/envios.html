@@ -1,4 +1,8 @@
-{% include 'header.html' %}
+{% if usuario.tipo_usuario == 'ADMIN'%}
+{% include 'header-admin.html' %}
+{%else%}
+{% include 'header-usuario.html' %}
+{%endif%}
 
 <section class="section">
     <div class="container">
@@ -9,43 +13,75 @@
         </a>
 
         <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Origen</th>
-                    <th>Destino</th>
-                    <th>Remitente</th>
-                    <th>Destinatario</th>
-                    <th>Fecha de Envío</th>
-                    <th>Número de Guía</th>
-                    <th>Estado</th>
-                    <th>Opciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for envio in envios %}
+            {% if usuario.tipo_usuario == 'ADMIN'%}
+                <thead>
                     <tr>
-                        <td>{{ envio.id }}</td>
-                        <td>{{ envio.origen_codigo }}</td>
-                        <td>{{ envio.destino_codigo }}</td>
-                        <td>{{ envio.remitente }}</td>
-                        <td>{{ envio.destinatario }}</td>
-                        <td>{{ envio.fecha_envio }}</td>
-                        <td>{{ envio.numero_guia }}</td>
-                        <td>{{ envio.estado }}</td>
-                        <td>
-                            <a href="{{ url_for('editar_envio', id=envio.id) }}" class="btn btn-info">Editar</a>
-                            <form action="{{ url_for('eliminar_envio', id=envio.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este envío?');">
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
-                            </form>
-                        </td>
+                        <th>ID</th>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th>Remitente</th>
+                        <th>Destinatario</th>
+                        <th>Fecha de Envío</th>
+                        <th>Número de Guía</th>
+                        <th>Estado</th>
+                        <th>Opciones</th>
                     </tr>
-                {% else %}
+                </thead>
+                <tbody>
+                    {% for envio in envios %}
+                        <tr>
+                            <td>{{ envio.id }}</td>
+                            <td>{{ envio.origen_codigo }}</td>
+                            <td>{{ envio.destino_codigo }}</td>
+                            <td>{{ envio.remitente }}</td>
+                            <td>{{ envio.destinatario }}</td>
+                            <td>{{ envio.fecha_envio }}</td>
+                            <td>{{ envio.numero_guia }}</td>
+                            <td>{{ envio.estado }}</td>
+                            <td>
+                                <a href="{{ url_for('editar_envio', id=envio.id) }}" class="btn btn-info">Editar</a>
+                                <form action="{{ url_for('eliminar_envio', id=envio.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este envío?');">
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center">No hay envíos registrados</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            {%else%}
+                <thead>
                     <tr>
-                        <td colspan="8" class="text-center">No hay envíos registrados</td>
+                        <th>ID</th>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th>Remitente</th>
+                        <th>Destinatario</th>
+                        <th>Fecha de Envío</th>
+                        <th>Número de Guía</th>
+                        <th>Estado</th>
                     </tr>
-                {% endfor %}
-            </tbody>
+                </thead>
+                <tbody>
+                    {% for envio in envios %}
+                        <tr>
+                            <td>{{ envio.id }}</td>
+                            <td>{{ envio.origen_codigo }}</td>
+                            <td>{{ envio.destino_codigo }}</td>
+                            <td>{{ envio.remitente }}</td>
+                            <td>{{ envio.destinatario }}</td>
+                            <td>{{ envio.fecha_envio }}</td>
+                            <td>{{ envio.numero_guia }}</td>
+                            <td>{{ envio.estado }}</td>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center">No hay envíos registrados</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            {%endif%}
         </table>
     </div>
 </section>

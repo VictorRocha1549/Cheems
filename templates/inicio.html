@@ -1,4 +1,8 @@
-{% include 'header.html' %}
+{% if usuario.tipo_usuario == 'ADMIN'%}
+{% include 'header-admin.html' %}
+{%else%}
+{% include 'header-usuario.html' %}
+{%endif%}
 <section class="section hero-section">
     <div class="bg-overlay bg-primary back-presentation"></div>
     <div class="container">
