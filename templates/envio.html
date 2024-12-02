@@ -1,4 +1,8 @@
-{% include 'header.html' %}
+{% if usuario.tipo_usuario == 'ADMIN'%}
+{% include 'header-admin.html' %}
+{%else%}
+{% include 'header-usuario.html' %}
+{%endif%}
 
     <div class="container mt-5">
         <h2>Editar Envío</h2>

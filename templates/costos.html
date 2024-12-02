@@ -1,4 +1,11 @@
-{% include 'header2.html' %}
+{% if usuario is defined and usuario.tipo_usuario == 'ADMIN' %}
+    {% include 'header-admin.html' %}
+{% elif usuario is defined and usuario.tipo_usuario == 'NORMAL' %}
+    {% include 'header-usuario.html' %}
+{% else %}
+    {% include 'header-default.html' %}
+{% endif %}
+
 
 <body>
     <h1>Costos de envio por tamaño</h1>
