@@ -54,7 +54,9 @@ def guia():
     ciudades_dict = {c['id']: c['nombre'] for c in ciudades}
     for g in guia:
         g['ciudad_nombre'] = ciudades_dict.get(g['ciudad_id'], "Ciudad desconocida")
-    return render_template('guia.html', guia=guia)
+    usuario_id = session.get('usuario_id')  # Devuelve None si no existe
+    usuario = Usuario.get_by_id(usuario_id) if usuario_id else None
+    return render_template('guia.html', guia=guia, usuario=usuario)
 
 
 
@@ -81,14 +83,15 @@ def envios():
             envio.destino_codigo = destino['codigo']
         else:
             envio.destino_codigo = "Desconocido"
-
-    return render_template('envios.html', envios=envios)
+    usuario=Usuario.get_by_id(session['usuario_id'])
+    return render_template('envios.html', envios=envios, usuario=usuario)
 
 @app.route('/envio-registro', methods=['GET'])
 def envio_registro():  
     envio = Envio(remitente='', destinatario='', origen_id='', destino_id='', fecha_envio='', numero_guia='', estado='')
     ciudades = Ciudad.get_all()  # Obtén todas las ciudades para pasarlas al formulario
-    return render_template('envio.html', envio=envio, ciudades=ciudades)
+    usuario=Usuario.get_by_id(session['usuario_id'])
+    return render_template('envio.html', envio=envio, ciudades=ciudades, usuario=usuario)
 
 
 @app.route('/envios', methods=['POST'])
@@ -163,8 +166,8 @@ def editar_envio(id):
             return jsonify({'error': 'No se pudo actualizar el envío'}), 400
 
         return redirect(url_for('envios')) 
-
-    return render_template('envio.html', envio=envio, ciudades=ciudades)
+    usuario=Usuario.get_by_id(session['usuario_id'])
+    return render_template('envio.html', envio=envio, ciudades=ciudades, usuario=usuario)
 
 
 @app.route('/crear_envio', methods=['POST', 'GET'])
@@ -234,7 +237,9 @@ def rastrear_envio():
 
 @app.route('/costos.html')
 def costos():
-    return render_template('costos.html')
+    usuario_id = session.get('usuario_id')  # Devuelve None si no existe
+    usuario = Usuario.get_by_id(usuario_id) if usuario_id else None
+    return render_template('costos.html', usuario=usuario)
 
 #Rutas para usuarios
 
@@ -268,7 +273,8 @@ def inicio_valido():
 
 @app.route('/inicio', methods=['GET'])
 def inicio():
-    return render_template('inicio.html')
+    usuario=Usuario.get_by_id(session['usuario_id'])
+    return render_template('inicio.html', usuario=usuario)
 
 
 
