@@ -3,7 +3,6 @@ from entities.ciudad import Ciudad
 from entities.envio import Envio
 from entities.usuario import Usuario
 from entities.guia import Guia
-
 app = Flask(__name__)
 
 app.secret_key='Aqui se supone va una clave secreta, pero da igual, es un proyecto escolar'
@@ -48,7 +47,7 @@ def update_ciudad(id):
 
 @app.route('/guia')
 def guia():
-    guia = Guia.get_all(Guia)  # Obtiene todos los datos de las guías (esto puede modificarse según tus necesidades)
+    guia = Guia.get_all() # Obtiene todos los datos de las guías (esto puede modificarse según tus necesidades)
     ciudades=[]
     for g in guia:
         ciudades.append(Ciudad.get_by_id(g['ciudad_id']))
@@ -123,12 +122,13 @@ def get_envio(id):
     return jsonify(envio), 200
 
 
-@app.route('/envio/<int:id>', methods=['DELETE'])
-def eliminar_envio(id):  # Cambié el nombre de la función
+@app.route('/envio/<int:id>', methods=['POST'])
+def eliminar_envio(id):
     result = Envio.delete(id)
     if result == 0:
         return jsonify({'error': 'El envío no existe'}), 404
     return jsonify({'message': 'Envío eliminado exitosamente'}), 200
+
 
 @app.route('/envio/<int:id>/editar', methods=['GET', 'POST'])
 def editar_envio(id):
@@ -165,6 +165,72 @@ def editar_envio(id):
         return redirect(url_for('envios')) 
 
     return render_template('envio.html', envio=envio, ciudades=ciudades)
+
+
+@app.route('/crear_envio', methods=['POST', 'GET'])
+def crear_envio():
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        origen_id = request.form.get('origen_id')
+        destino_id = request.form.get('destino_id')
+        remitente = request.form.get('remitente')
+        destinatario = request.form.get('destinatario')
+        fecha_envio = request.form.get('fecha_envio')
+        numero_guia = request.form.get('numero_guia')  # Número de guía proporcionado por el formulario
+
+        # Si el número de guía no es proporcionado (vacío), generarlo automáticamente
+        if not numero_guia:
+            numero_guia = Envio.generar_numero_guia_unico()
+
+        # Crear el objeto Envio
+        nuevo_envio = Envio(
+            origen_id=origen_id,
+            destino_id=destino_id,
+            remitente=remitente,
+            destinatario=destinatario,
+            fecha_envio=fecha_envio,
+            numero_guia=numero_guia,
+            estado="pendiente"
+        )
+
+        # Guardar el nuevo envío
+        nuevo_envio.save()
+
+        # Redirigir a la lista de envíos u otra página
+        return redirect(url_for('envios'))
+
+    # Si el método es GET, generar un número de guía único
+    numero_guia = Envio.generar_numero_guia_unico()
+
+    # Pasar el número de guía a la plantilla para el formulario
+    return render_template('crear_envio.html', numero_guia=numero_guia)
+
+@app.route('/rastrear_envio', methods=['GET', 'POST'])
+def rastrear_envio():
+    if request.method == 'POST':
+        numero_guia = request.form.get('numero_guia')
+        
+        # Intentar obtener los rastreos para el número de guía
+        rastreos = Guia.get_rastreos_by_envio(numero_guia)
+
+        if rastreos:
+            # Si ya existen rastreos, los mostramos
+            return render_template('guia.html', guia=rastreos)
+        else:
+            # Si no existen rastreos, activar el simulador para generarlos
+            crear_rastreo_simulado(numero_guia)
+
+            # Ahora, obtener los rastreos después de que se han creado
+            rastreos = Guia.get_rastreos_by_envio(numero_guia)
+
+            # Mostrar los rastreos generados
+            return render_template('guia.html', guia=rastreos, mensaje="Rastreos simulados creados.")
+
+    # Si el método es GET, solo mostramos el formulario
+    return render_template('guia.html')
+
+
+
 
 @app.route('/costos.html')
 def costos():
