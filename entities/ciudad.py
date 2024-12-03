@@ -77,3 +77,17 @@ class Ciudad:
         finally:
             cursor.close()
             connection.close()
+    @staticmethod
+    def delete(ciudad_id):
+        try:
+            connection = get_dn_connection()
+            cursor = connection.cursor()
+            cursor.execute('DELETE FROM ciudad WHERE id = %s', (ciudad_id,))
+            connection.commit()
+            return cursor.rowcount
+        except Error as e:
+            print(f"Error al eliminar la ciudad: {e}")
+            return 0
+        finally:
+            cursor.close()
+            connection.close()        

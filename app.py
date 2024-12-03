@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for, session
+from flask import Flask, request, render_template, jsonify, redirect, url_for, session, flash
 from entities.ciudad import Ciudad
 from entities.envio import Envio
 from entities.usuario import Usuario
@@ -42,6 +42,16 @@ def update_ciudad(id):
         return jsonify({'error': 'El registro de ciudad no existe'}), 404
     return jsonify({'id': id}), 201
 
+@app.route('/ciudad/<int:id>', methods=['POST'])
+def eliminar_ciudad(id):
+    result = Ciudad.delete(id)
+    if result == 0:
+        # Puedes añadir un mensaje flash para notificar que la ciudad no existe.
+        flash('La ciudad no existe o ya fue eliminada.', 'error')
+    else:
+        # Mensaje flash para notificar eliminación exitosa.
+        flash('Ciudad eliminada exitosamente.', 'success')
+    return redirect(url_for('ciudades'))
 
 #Metodos para guia
 
@@ -57,6 +67,8 @@ def guia():
     usuario_id = session.get('usuario_id')  # Devuelve None si no existe
     usuario = Usuario.get_by_id(usuario_id) if usuario_id else None
     return render_template('guia.html', guia=guia, usuario=usuario)
+
+    
 
 
 
@@ -129,8 +141,12 @@ def get_envio(id):
 def eliminar_envio(id):
     result = Envio.delete(id)
     if result == 0:
-        return jsonify({'error': 'El envío no existe'}), 404
-    return jsonify({'message': 'Envío eliminado exitosamente'}), 200
+        flash('El envío no existe o ya fue eliminado.', 'error')
+    else:
+        flash('Envío eliminado exitosamente.', 'success')
+
+    return redirect(url_for('envios'))  # Redirigir a la página de envíos después de eliminar
+
 
 
 @app.route('/envio/<int:id>/editar', methods=['GET', 'POST'])

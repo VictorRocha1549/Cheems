@@ -6,6 +6,19 @@
 
 <section class="section">
     <div class="container">
+        <!-- Mostrar los mensajes flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-info">
+                    <ul>
+                        {% for category, message in messages %}
+                            <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+
         <h4>Lista de Envíos</h4>
 
         <a href="{{ url_for('envio_registro') }}" class="btn btn-success mb-3">
