@@ -47,29 +47,21 @@ class Ciudad:
         finally:
             cursor.close()
             connection.close()
+    
     @classmethod
     def update(cls, id, ciudad):
         try:
             connection = get_dn_connection()
             cursor = connection.cursor()
-            cursor.execute('SELECT * FROM ciudad WHERE id = %s', (id,))
-            existing_city = cursor.fetchone()
-            if existing_city is None:
-                print(f"No se encontró una ciudad con el id: {id}")
-                return 0  # No se encontró la ciudad, no se puede actualizar
-        
             cursor.execute('UPDATE ciudad SET nombre = %s, codigo = %s WHERE id = %s', 
-                            (ciudad.nombre, ciudad.codigo, id))
+                           (ciudad.nombre, ciudad.codigo, id))
             connection.commit()
-            print(f"Filas afectadas por la actualización: {cursor.rowcount}")
-            return cursor.rowcount  # 1 si se actualizó correctamente
+            return cursor.rowcount  # Devuelve el número de filas afectadas
         except Error as e:
-            print(f"Error al actualizar la ciudad: {e}")
             return str(e)
         finally:
             cursor.close()
             connection.close()
-
 
     @staticmethod
     def get_by_name(ciudad_nombre):
@@ -85,7 +77,6 @@ class Ciudad:
         finally:
             cursor.close()
             connection.close()
-
     @staticmethod
     def delete(ciudad_id):
         try:
@@ -99,4 +90,4 @@ class Ciudad:
             return 0
         finally:
             cursor.close()
-            connection.close()
+            connection.close()        

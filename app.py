@@ -1,10 +1,8 @@
 from flask import Flask, request, render_template, jsonify, redirect, url_for, session, flash
-from persistences.db import get_dn_connection
 from entities.ciudad import Ciudad
 from entities.envio import Envio
 from entities.usuario import Usuario
 from entities.guia import Guia
-import random
 app = Flask(__name__)
 
 app.secret_key='Aqui se supone va una clave secreta, pero da igual, es un proyecto escolar'
@@ -19,50 +17,39 @@ def ciudades():
     ciudades = Ciudad.get_all()
     return render_template('ciudades.html', ciudades=ciudades)
 
-@app.route('/ciudad-registro/<int:id>', methods=['GET'])
-def ciudad_registro(id):
-    ciudad = Ciudad.get_by_id(id)  # Asegúrate de que esta función existe
-    if ciudad is None:
-        return jsonify({'error': 'Ciudad no encontrada'}), 404
-    return render_template('ciudad.html', ciudad=ciudad)
-
+@app.route('/ciudad-registro', methods=['GET'])
+def ciudad_registro():
+    return render_template('ciudad.html')
 
 @app.route('/ciudad', methods=['GET'])
 def get_ciudades():
     ciudades = Ciudad.get_all()
     return jsonify(ciudades), 200
 
+@app.route('/ciudad', methods=['POST'])
+def save_ciudad():
+    data = request.json
+    ciudad = Ciudad(nombre=data['nombre'], codigo=data['codigo'])
+    id = Ciudad.save(ciudad)
+    return jsonify({'id': id}), 201
 
 @app.route('/ciudad/<int:id>', methods=['PUT'])
 def update_ciudad(id):
     data = request.json
-
-    ciudad_data = Ciudad.get_by_id(id)
-    
-    if ciudad_data is None:
-        return jsonify({'error': 'El registro de ciudad no existe'}), 404
-
-    ciudad = Ciudad(ciudad_data['nombre'], ciudad_data['codigo'])
-
-    ciudad.nombre = data['nombre']
-    ciudad.codigo = data['codigo']
-
-    result = Ciudad.update(id, ciudad)  
-    
+    ciudad = Ciudad(nombre=data['nombre'], codigo=data['codigo'])
+    result = Ciudad.update(id, ciudad)
     if result == 0:
-        return jsonify({'error': 'No se pudo actualizar la ciudad'}), 400
-    
-    return jsonify({'id': id, 'nombre': ciudad.nombre, 'codigo': ciudad.codigo}), 200
-
+        return jsonify({'error': 'El registro de ciudad no existe'}), 404
+    return jsonify({'id': id}), 201
 
 @app.route('/ciudad/<int:id>', methods=['POST'])
 def eliminar_ciudad(id):
     result = Ciudad.delete(id)
     if result == 0:
-        
+        # Puedes añadir un mensaje flash para notificar que la ciudad no existe.
         flash('La ciudad no existe o ya fue eliminada.', 'error')
     else:
-        
+        # Mensaje flash para notificar eliminación exitosa.
         flash('Ciudad eliminada exitosamente.', 'success')
     return redirect(url_for('ciudades'))
 
@@ -81,6 +68,11 @@ def guia():
     usuario = Usuario.get_by_id(usuario_id) if usuario_id else None
     return render_template('guia.html', guia=guia, usuario=usuario)
 
+    
+
+
+
+
 
 # Métodos para envíos
 
@@ -88,7 +80,7 @@ def guia():
 def envios():
     envios = Envio.get_all()  # Obtén todos los envíos
 
-    # Depuración: Imprimir cada envio para verificar el valor de id
+    # Depuración: Imprimir cada `envio` para verificar el valor de `id`
     for envio in envios:
         print(f"Envío ID: {envio.id}")  # Aquí verificamos si el id está presente
 
@@ -156,6 +148,7 @@ def eliminar_envio(id):
     return redirect(url_for('envios'))  # Redirigir a la página de envíos después de eliminar
 
 
+
 @app.route('/envio/<int:id>/editar', methods=['GET', 'POST'])
 def editar_envio(id):
     envio = Envio.get_by_id(id)
@@ -168,22 +161,10 @@ def editar_envio(id):
         # Obtener los datos del formulario
         data = request.form
         nuevo_numero_guia = data['numero_guia']
-       
-        if not nuevo_numero_guia:
-            nuevo_numero_guia = str(random.randint(1000000000, 9999999999))  # Genera un número de guía aleatorio
-
-        # Verificar si el nuevo número de guía ya existe en otro envío
-        connection = get_dn_connection()  # Obtiene la conexión
-        if connection is None:
-            return jsonify({'error': 'No se pudo establecer la conexión a la base de datos'}), 500
         
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM envios WHERE numero_guia = %s AND id != %s", (nuevo_numero_guia, id))
-        envio_existente = cursor.fetchone()
-
-        if envio_existente:
-            cursor.close()  # Cierra el cursor
-            connection.close()  # Cierra la conexión
+        # Verificar si el nuevo número de guía ya existe en otro envío
+        envio_existente = Envio.query.filter_by(numero_guia=nuevo_numero_guia).first()
+        if envio_existente and envio_existente.id != id:
             return render_template('envio.html', envio=envio, ciudades=ciudades, error="El número de guía ya está en uso")
 
         # Si no existe, actualizar el envío
@@ -195,19 +176,13 @@ def editar_envio(id):
         envio.numero_guia = nuevo_numero_guia
         envio.estado = data['estado']
 
-        # Actualizamos el envío en la base de datos
         rows_affected = Envio.update(id, envio)
-
-        # Cierra la conexión y el cursor
-        cursor.close()
-        connection.close()
 
         if rows_affected == 0:
             return jsonify({'error': 'No se pudo actualizar el envío'}), 400
 
-        return redirect(url_for('envios'))  # Redirige a la lista de envíos después de la actualización
-
-    usuario = Usuario.get_by_id(session['usuario_id'])
+        return redirect(url_for('envios')) 
+    usuario=Usuario.get_by_id(session['usuario_id'])
     return render_template('envio.html', envio=envio, ciudades=ciudades, usuario=usuario)
 
 
@@ -319,6 +294,7 @@ def inicio():
 
 
 
+
+
 if __name__ == '__main__':
-    app.run(debug=True) 
-   
+    app.run(debug=True)
