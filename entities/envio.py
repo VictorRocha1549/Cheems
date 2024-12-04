@@ -2,6 +2,7 @@ from persistences.db import get_dn_connection
 import random
 import string
 import logging
+from mysql.connector import Error
 
 class Envio:
     def __init__(self, id=None, origen_id='', destino_id='', remitente='', destinatario='', fecha_envio='', numero_guia='', estado=''):
@@ -69,32 +70,20 @@ class Envio:
 
         return {"success": "Envío creado exitosamente"}
 
-    @staticmethod
-    def update(id, envio):
-    # Establecer conexión con la base de datos
-        conn = get_dn_connection()
-        cursor = conn.cursor()
-
-    # Si el numero_guia no es None, lo dejamos igual; si es None, lo generamos
-        if not envio.numero_guia:
-            envio.numero_guia = None  # O generamos uno nuevo si es necesario
-
-        query = """
-        UPDATE envios
-        SET origen_id = %s, destino_id = %s, remitente = %s, destinatario = %s,
-            fecha_envio = %s, numero_guia = %s, estado = %s
-        WHERE id = %s
-        """
-        cursor.execute(query, (envio.origen_id, envio.destino_id, envio.remitente, envio.destinatario,
-                           envio.fecha_envio, envio.numero_guia, envio.estado, id))
-
-        conn.commit()
-        rows_affected = cursor.rowcount
-        cursor.close()
-        conn.close()
-    
-    # Retornar el número de filas afectadas
-        return rows_affected
+    @classmethod
+    def update(cls, id, envio, numero_guia):
+        try:
+            connection = get_dn_connection()
+            cursor = connection.cursor()
+            cursor.execute('UPDATE envios SET origen_id = %s, destino_id = %s, remitente = %s, destinatario = %s, fecha_envio = %s, numero_guia = %s, estado = %s WHERE id = %s', 
+                           (envio.origen_id, envio.destino_id, envio.remitente, envio.destinatario, envio.fecha_envio, numero_guia, envio.estado, id))
+            connection.commit()
+            return cursor.rowcount  # Devuelve el número de filas afectadas
+        except Error as e:
+            return str(e)
+        finally:
+            cursor.close()
+            connection.close()
 
     @staticmethod
     def delete(id):

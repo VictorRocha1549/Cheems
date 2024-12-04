@@ -176,12 +176,8 @@ def editar_envio(id):
     if request.method == 'POST':
         # Obtener los datos del formulario
         data = request.form
-        nuevo_numero_guia = data['numero_guia']
+
         
-        # Verificar si el nuevo número de guía ya existe en otro envío
-        envio_existente = Envio.query.filter_by(numero_guia=nuevo_numero_guia).first()
-        if envio_existente and envio_existente.id != id:
-            return render_template('envio.html', envio=envio, ciudades=ciudades, error="El número de guía ya está en uso")
 
         # Si no existe, actualizar el envío
         envio.origen_id = data['origen_id']
@@ -189,17 +185,16 @@ def editar_envio(id):
         envio.remitente = data['remitente']
         envio.destinatario = data['destinatario']
         envio.fecha_envio = data['fecha_envio']
-        envio.numero_guia = nuevo_numero_guia
         envio.estado = data['estado']
 
-        rows_affected = Envio.update(id, envio)
+        rows_affected = Envio.update(id, envio, envio.numero_guia)
 
         if rows_affected == 0:
             return jsonify({'error': 'No se pudo actualizar el envío'}), 400
 
         return redirect(url_for('envios')) 
     usuario=Usuario.get_by_id(session['usuario_id'])
-    return render_template('envio.html', envio=envio, ciudades=ciudades, usuario=usuario)
+    return render_template('envio2.html', envio=envio, ciudades=ciudades, usuario=usuario)
 
 
 @app.route('/crear_envio', methods=['POST', 'GET'])
