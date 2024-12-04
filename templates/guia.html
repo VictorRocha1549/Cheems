@@ -40,15 +40,17 @@
                                     <tr>
                                         <th>Fecha</th>
                                         <th>Descripción</th>
-                                        <th>Posición</th>
+                                        <th>Ciudad</th>
+                                        <th>Guia</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                       {% for p in guia  %}
+                                       {% for p in puntos  %}
                                        <td>{{p.fecha}}</td>
                                        <td>{{p.estado}}</td>
                                        <td>{{p.ciudad_nombre}}</td>
+                                       <td>{{p.envio_numero_guia}}</td>
                                     </tr>
                                     {% else %}
                                     <tr>
