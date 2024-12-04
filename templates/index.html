@@ -9,7 +9,7 @@
                     <p class="font-size-14">Ingresa el número de rastreo para obtener la información del estado actual de tu paquete</p>
                     <input type="text" class="form-control" id="searchList" autocomplete="off" placeholder="Ingresa los 10 dígitos de la guía">
                     <div class="d-flex flex-wrap gap-2 mt-4">
-                        <a onclick="guias()" class="btn btn-warning">Rastrear</a>
+                        <a href="{{ url_for('guia') }}" class="btn btn-warning">Rastrear</a>
                         <a href="costos.html" class="btn btn-light">Costos de envío</a>
                     </div>
                     <script></script>
@@ -154,5 +154,4 @@
         </div>
     </div>
 </section>
-<script src="{{url_for('static', filename='js/cheems/guia.js')}}"></script>
 {% include 'footer.html' %}

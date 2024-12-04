@@ -55,19 +55,4 @@ class Guia:
         finally:
             cursor.close()
             connection.close()
-
-    @classmethod
-    def get_all_by_guia(cls, guia):
-        try:
-            connection = get_dn_connection()
-            cursor = connection.cursor(dictionary=True)
-            cursor.execute('SELECT * FROM puntos WHERE envio_numero_guia = %s', (guia,))
-            return cursor.fetchall()
-        except Error as e:
-            return str(e)
-        finally:
-            if cursor:
-                cursor.close()
-            if connection:
-                connection.close()
             
