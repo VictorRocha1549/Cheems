@@ -26,6 +26,13 @@ def get_ciudades():
     ciudades = Ciudad.get_all()
     return jsonify(ciudades), 200
 
+@app.route('/ciudad/<int:id>', methods=['GET'])
+def get_ciudad(id):
+    ciudad = Ciudad.get_by_id(id)
+    if not ciudad:
+        return jsonify({'error': 'El registro de ciudad no existe'}), 404
+    return render_template('ciudad2.html', ciudad=ciudad), 200
+
 @app.route('/ciudad', methods=['POST'])
 def save_ciudad():
     data = request.json
@@ -55,18 +62,27 @@ def eliminar_ciudad(id):
 
 #Metodos para guia
 
-@app.route('/guia')
+@app.route('/guia', methods=['GET'])
 def guia():
-    guia = Guia.get_all() # Obtiene todos los datos de las guías (esto puede modificarse según tus necesidades)
+    guia = request.args.get('guia')
+    puntos = Guia.get_all_by_guia(guia) if guia else []
     ciudades=[]
-    for g in guia:
-        ciudades.append(Ciudad.get_by_id(g['ciudad_id']))
+    for p in puntos:
+        ciudades.append(Ciudad.get_by_id(p['ciudad_id']))
     ciudades_dict = {c['id']: c['nombre'] for c in ciudades}
-    for g in guia:
-        g['ciudad_nombre'] = ciudades_dict.get(g['ciudad_id'], "Ciudad desconocida")
-    usuario_id = session.get('usuario_id')  # Devuelve None si no existe
+    for p in puntos:
+        p['ciudad_nombre'] = ciudades_dict.get(p['ciudad_id'], "Ciudad desconocida")
+    usuario_id = session.get('usuario_id')
     usuario = Usuario.get_by_id(usuario_id) if usuario_id else None
-    return render_template('guia.html', guia=guia, usuario=usuario)
+
+    return render_template('guia.html', guia=guia, puntos=puntos, usuario=usuario)
+
+@app.route('/guia', methods=['POST'])
+def guia_datos():
+    data = request.json
+    puntos=Guia.get_all_by_guia(data['guia'])
+    return jsonify({'puntos': puntos}), 201 
+
 
     
 
@@ -160,12 +176,8 @@ def editar_envio(id):
     if request.method == 'POST':
         # Obtener los datos del formulario
         data = request.form
-        nuevo_numero_guia = data['numero_guia']
+
         
-        # Verificar si el nuevo número de guía ya existe en otro envío
-        envio_existente = Envio.query.filter_by(numero_guia=nuevo_numero_guia).first()
-        if envio_existente and envio_existente.id != id:
-            return render_template('envio.html', envio=envio, ciudades=ciudades, error="El número de guía ya está en uso")
 
         # Si no existe, actualizar el envío
         envio.origen_id = data['origen_id']
@@ -173,17 +185,16 @@ def editar_envio(id):
         envio.remitente = data['remitente']
         envio.destinatario = data['destinatario']
         envio.fecha_envio = data['fecha_envio']
-        envio.numero_guia = nuevo_numero_guia
         envio.estado = data['estado']
 
-        rows_affected = Envio.update(id, envio)
+        rows_affected = Envio.update(id, envio, envio.numero_guia)
 
         if rows_affected == 0:
             return jsonify({'error': 'No se pudo actualizar el envío'}), 400
 
         return redirect(url_for('envios')) 
     usuario=Usuario.get_by_id(session['usuario_id'])
-    return render_template('envio.html', envio=envio, ciudades=ciudades, usuario=usuario)
+    return render_template('envio2.html', envio=envio, ciudades=ciudades, usuario=usuario)
 
 
 @app.route('/crear_envio', methods=['POST', 'GET'])
