@@ -54,7 +54,7 @@
                                     <td>{{ c.codigo }}</td>
                                     <td>
                                         <div class="btn-group me-2 mb-2 mb-sm-0 font-size-16">
-                                            <a onclick="registro({{ c.id }})" class="btn btn-info waves-light waves-effect">
+                                            <a onclick="editar({{ c.id }})" class="btn btn-info waves-light waves-effect">
                                                 <i class="fas fa-pen"></i>
                                             </a>
                                             <form action="{{ url_for('eliminar_ciudad', id=c.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta ciudad?');">
