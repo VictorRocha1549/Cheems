@@ -14,6 +14,7 @@ class Envio:
         self.numero_guia = numero_guia
         self.estado = estado
 
+
     @staticmethod
     def get_all():
         conn = get_dn_connection()
@@ -41,23 +42,23 @@ class Envio:
 
     def save(self):
         try:
-            # Crear una conexión con la base de datos
+        # Crear una conexión con la base de datos
             conn = get_dn_connection()
             cursor = conn.cursor()
 
-            # Si el número de guía no se proporciona, generar uno aleatorio de 10 dígitos
+        # Si el número de guía no se proporciona, generar uno aleatorio de 10 dígitos
             if not self.numero_guia:
                 self.numero_guia = self.generar_numero_guia_unico()
 
-            # Insertar el nuevo envío en la base de datos
+        # Insertar el nuevo envío en la base de datos
             query = """
                 INSERT INTO envios (origen_id, destino_id, remitente, destinatario, fecha_envio, numero_guia, estado)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """
+                    """
             cursor.execute(query, (self.origen_id, self.destino_id, self.remitente, self.destinatario,
-                                   self.fecha_envio, self.numero_guia, self.estado))
+                               self.fecha_envio, self.numero_guia, self.estado))
 
-            # Confirmar la transacción
+        # Confirmar la transacción
             conn.commit()
             cursor.close()
             conn.close()
@@ -74,15 +75,10 @@ class Envio:
         conn = get_dn_connection()
         cursor = conn.cursor()
 
-    # Comprobar si el número de guía ya existe en otro envío
-        cursor.execute("SELECT * FROM envios WHERE numero_guia = %s AND id != %s", (envio.numero_guia, id))
-        envio_existente = cursor.fetchone()  # Esto es equivalente a `first()` en SQLAlchemy
-        if envio_existente:
-            cursor.close()
-            conn.close()
-            return 0  # Si el número de guía ya existe
+    # Si el numero_guia no es None, lo dejamos igual; si es None, lo generamos
+        if not envio.numero_guia:
+            envio.numero_guia = None  # O generamos uno nuevo si es necesario
 
-    # Actualizar el envío en la base de datos
         query = """
         UPDATE envios
         SET origen_id = %s, destino_id = %s, remitente = %s, destinatario = %s,
@@ -91,14 +87,14 @@ class Envio:
         """
         cursor.execute(query, (envio.origen_id, envio.destino_id, envio.remitente, envio.destinatario,
                            envio.fecha_envio, envio.numero_guia, envio.estado, id))
-        conn.commit()
 
+        conn.commit()
         rows_affected = cursor.rowcount
         cursor.close()
         conn.close()
-
+    
+    # Retornar el número de filas afectadas
         return rows_affected
-
 
     @staticmethod
     def delete(id):
