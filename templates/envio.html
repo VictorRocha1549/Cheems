@@ -6,7 +6,8 @@
 
     <div class="container mt-5">
         <h2>Editar Envío</h2>
-        <form action="{{ url_for('save_envio') }}" method="POST">
+        
+        <form action="{{ url_for('editar_envio', id=envio.id) }}" method="POST">
             <div class="mb-3">
                 <label for="remitente" class="form-label">Remitente:</label>
                 <input type="text" class="form-control" id="remitente" name="remitente" value="{{ envio.remitente }}" required>

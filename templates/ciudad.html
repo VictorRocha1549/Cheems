@@ -1,7 +1,7 @@
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="transaction-detailModalLabel">Registro de Ciudad</h5>
+            <h5 class="modal-title" id="transaction-detailModalLabel">Editar Ciudad</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
@@ -9,7 +9,7 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="form-nombre" class="form-label">Nombre:</label>
-                        <input type="text" class="form-control" id="form-nombre" value="">
+                        <input type="text" class="form-control" id="form-nombre" value="{{ ciudad.nombre }}">
                     </div>
                 </div>
             </div>
@@ -18,7 +18,7 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label for="form-codigo" class="form-label">Codigo:</label>
-                        <input type="text" class="form-control" id="form-codigo" value="">
+                        <input type="text" class="form-control" id="form-codigo" value="{{ ciudad.codigo }}">
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
         </div>
         <div class="modal-footer">
             <a class="btn btn-light" data-bs-dismiss="modal">Cerrar</a>
-            <a onclick="save()" class="btn btn-info">Guardar</a>
+            <a onclick="save({{ ciudad.id }})" class="btn btn-info">Guardar</a>
         </div>
     </div>
 </div>
