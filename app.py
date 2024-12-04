@@ -224,32 +224,6 @@ def crear_envio():
     # Pasar el número de guía a la plantilla para el formulario
     return render_template('crear_envio.html', numero_guia=numero_guia)
 
-@app.route('/rastrear_envio', methods=['GET', 'POST'])
-def rastrear_envio():
-    if request.method == 'POST':
-        numero_guia = request.form.get('numero_guia')
-        
-        # Intentar obtener los rastreos para el número de guía
-        rastreos = Guia.get_rastreos_by_envio(numero_guia)
-
-        if rastreos:
-            # Si ya existen rastreos, los mostramos
-            return render_template('guia.html', guia=rastreos)
-        else:
-            # Si no existen rastreos, activar el simulador para generarlos
-            crear_rastreo_simulado(numero_guia)
-
-            # Ahora, obtener los rastreos después de que se han creado
-            rastreos = Guia.get_rastreos_by_envio(numero_guia)
-
-            # Mostrar los rastreos generados
-            return render_template('guia.html', guia=rastreos, mensaje="Rastreos simulados creados.")
-
-    # Si el método es GET, solo mostramos el formulario
-    return render_template('guia.html')
-
-
-
 
 @app.route('/costos.html')
 def costos():
