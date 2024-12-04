@@ -45,11 +45,10 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                       {% for p in puntos  %}
+                                       {% for p in guia  %}
                                        <td>{{p.fecha}}</td>
                                        <td>{{p.estado}}</td>
                                        <td>{{p.ciudad_nombre}}</td>
-                                       <td>{{p.envio_numero_guia}}</td>
                                     </tr>
                                     {% else %}
                                     <tr>
