@@ -26,6 +26,13 @@ def get_ciudades():
     ciudades = Ciudad.get_all()
     return jsonify(ciudades), 200
 
+@app.route('/ciudad/<int:id>', methods=['GET'])
+def get_ciudad(id):
+    ciudad = Ciudad.get_by_id(id)
+    if not ciudad:
+        return jsonify({'error': 'El registro de ciudad no existe'}), 404
+    return render_template('ciudad2.html', ciudad=ciudad), 200
+
 @app.route('/ciudad', methods=['POST'])
 def save_ciudad():
     data = request.json
