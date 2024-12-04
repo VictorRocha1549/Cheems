@@ -1,69 +1,65 @@
 {% if usuario is defined and usuario.tipo_usuario == 'ADMIN' %}
-    {% include 'header-admin.html' %}
+{% include 'header-admin.html' %}
 {% elif usuario is defined and usuario.tipo_usuario == 'NORMAL' %}
-    {% include 'header-usuario.html' %}
+{% include 'header-usuario.html' %}
 {% else %}
-    {% include 'header-default.html' %}
+{% include 'header-default.html' %}
 {% endif %}
 
-    <section class="section">
-        <div class="bg-overlay bg-primary back-presentation"></div>
-        <div class="container">
-            
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="d-sm-flex align-items-center justify-content-between">
-                            <div class="d-flex">
-                                <div class="flex-grow-1 align-self-center">
-                                    <div class="text-muted">
-                                        <h5 class="mb-1 title-page">Rastreo de guia</h5>
-                                        <p class="mb-0">Información del envío de tu pedido</p>
-                                    </div>
+<section class="section">
+    <div class="bg-overlay bg-primary back-presentation"></div>
+    <div class="container">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="d-sm-flex align-items-center justify-content-between">
+                        <div class="d-flex">
+                            <div class="flex-grow-1 align-self-center">
+                                <div class="text-muted">
+                                    <h5 class="mb-1 title-page">Rastreo de guia</h5>
+                                    <p class="mb-0">Información del envío de tu pedido</p>
                                 </div>
                             </div>
-                            <div class="page-title-right">
-                                <div class="d-flex flex-wrap gap-2">
-                                    <div class="clearfix mt-4 mt-lg-0">
-                                        <!--
+                        </div>
+                        <div class="page-title-right">
+                            <div class="d-flex flex-wrap gap-2">
+                                <div class="clearfix mt-4 mt-lg-0">
+                                    <!--
                                         <a onclick="registro(0)" class="btn btn-success waves-effect btn-label waves-light"><i class="bx bx-plus-medical label-icon"></i> Agregar</a>
                                          -->
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <hr class="mt-2">
-                        <div class="table-responsive">
-                            <table class="table table-striped mb-0">
-    
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Descripción</th>
-                                        <th>Ciudad</th>
-                                        <th>Guia</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        {% for p in puntos  %}
-                                        <td>{{p.fecha}}</td>
-                                        <td>{{p.estado}}</td>
-                                        <td>{{p.ciudad_nombre}}</td>
-                                        <td>{{p.envio_numero_guia}}</td>
-                                    </tr>
-                                    {% else %}
-                                    <tr>
-                                       <td colspan="3">No hay registros disponibles</td>
-                                    </tr>
-                                    {% endfor %}
-                               </tbody>
-                            </table>
-                        </div>
                     </div>
+                    <hr class="mt-2">
+                    <div class="tiempoLinea">
+                        {% for p in puntos %}
+                        <div class="tiempoLinea-item">
+                            <div class="icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="contenido">
+                                <p class="fecha">{{ p.fecha }}</p>
+                                <p class="descripcion">{{ p.estado }}</p>
+                                <p class="posicion">{{ p.ciudad_nombre }}</p>
+                                <p class="guia">Guía: {{ p.envio_numero_guia }}</p>
+                            </div>
+                        </div>
+                        <div class="tiempoLinea-conector"></div>
+                        {% else %}
+                        <div class="tiempoLinea-item">
+                            <div class="contenido">
+                                <p class="descripcion">No hay registros disponibles</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 <script src="{{ url_for('static', filename='js/cheems/guia.js') }}"></script>
 {% include 'footer.html' %}
